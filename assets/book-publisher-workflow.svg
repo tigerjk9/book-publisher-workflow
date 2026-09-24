@@ -1,0 +1,209 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Book Publisher Workflow</title>
+  <desc id="desc">독자와 목적을 정하는 브리프부터 조사, 설계, 집필, 편집 검수, 출간까지 이어지는 6단계 책 출간 워크플로우</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111F"/>
+      <stop offset="0.52" stop-color="#0B1729"/>
+      <stop offset="1" stop-color="#111A31"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="0" cy="0" r="1" gradientTransform="translate(1340 20) rotate(137) scale(660 510)">
+      <stop offset="0" stop-color="#6D5DFB" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#6D5DFB" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="0" cy="0" r="1" gradientTransform="translate(120 810) rotate(-28) scale(560 390)">
+      <stop offset="0" stop-color="#12C7A6" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#12C7A6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="line" x1="160" y1="0" x2="1440" y2="0">
+      <stop offset="0" stop-color="#24D6B1"/>
+      <stop offset="0.52" stop-color="#72A4FF"/>
+      <stop offset="1" stop-color="#9B7BFF"/>
+    </linearGradient>
+    <linearGradient id="state" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#132D3A"/>
+      <stop offset="0.5" stop-color="#172946"/>
+      <stop offset="1" stop-color="#241F49"/>
+    </linearGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#9BB6D8" stroke-opacity="0.055"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#020711" flood-opacity="0.42"/>
+    </filter>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M1 1L10 6L1 11" fill="none" stroke="#8199BC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <style>
+      .sans { font-family: Inter, Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", Arial, sans-serif; }
+      .eyebrow { font-size: 17px; font-weight: 700; letter-spacing: 4px; fill: #70E1C9; }
+      .headline { font-size: 56px; font-weight: 800; letter-spacing: -1.8px; fill: #F7FAFF; }
+      .subhead { font-size: 21px; font-weight: 450; fill: #9FB0C9; }
+      .number { font-size: 16px; font-weight: 800; letter-spacing: 1px; }
+      .stage-en { font-size: 14px; font-weight: 750; letter-spacing: 2.3px; fill: #95A8C3; }
+      .stage-ko { font-size: 28px; font-weight: 750; letter-spacing: -0.7px; fill: #F5F8FF; }
+      .stage-copy { font-size: 17px; font-weight: 500; fill: #A8B6CB; }
+      .micro { font-size: 14px; font-weight: 650; letter-spacing: 0.4px; fill: #B8C6D9; }
+      .state-title { font-size: 18px; font-weight: 800; letter-spacing: 0.2px; fill: #F5F8FF; }
+      .state-copy { font-size: 15px; font-weight: 500; fill: #9FB0C9; }
+      .output-title { font-size: 14px; font-weight: 800; letter-spacing: 1.5px; fill: #EAF0FB; }
+      .output-copy { font-size: 13px; font-weight: 500; fill: #899AB4; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" rx="36" fill="url(#background)"/>
+  <rect width="1600" height="900" rx="36" fill="url(#glowA)"/>
+  <rect width="1600" height="900" rx="36" fill="url(#glowB)"/>
+  <rect x="1" y="1" width="1598" height="898" rx="35" fill="url(#grid)" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="2"/>
+
+  <g class="sans">
+    <g transform="translate(92 80)">
+      <rect x="0" y="3" width="13" height="13" rx="4" fill="#25D5B2" transform="rotate(45 6.5 9.5)"/>
+      <text class="eyebrow" x="31" y="18">BOOK PUBLISHER</text>
+      <text class="headline" x="0" y="85">아이디어를 책으로 만드는 여섯 개의 문</text>
+      <text class="subhead" x="2" y="126">AI와 함께 쓰되, 사람의 판단과 검증 근거를 남기는 출간 워크플로우</text>
+    </g>
+
+    <g opacity="0.72">
+      <path d="M316 373H344" stroke="#8199BC" stroke-width="2" marker-end="url(#arrow)"/>
+      <path d="M559 373H587" stroke="#8199BC" stroke-width="2" marker-end="url(#arrow)"/>
+      <path d="M802 373H830" stroke="#8199BC" stroke-width="2" marker-end="url(#arrow)"/>
+      <path d="M1045 373H1073" stroke="#8199BC" stroke-width="2" marker-end="url(#arrow)"/>
+      <path d="M1288 373H1316" stroke="#8199BC" stroke-width="2" marker-end="url(#arrow)"/>
+    </g>
+
+    <path d="M169 579H1431" stroke="url(#line)" stroke-opacity="0.24" stroke-width="8" stroke-linecap="round" filter="url(#softGlow)"/>
+    <path d="M169 579H1431" stroke="url(#line)" stroke-width="2" stroke-linecap="round"/>
+
+    <g filter="url(#shadow)">
+      <g transform="translate(92 254)">
+        <rect width="224" height="238" rx="24" fill="#0E1A2C" stroke="#263850"/>
+        <rect x="20" y="20" width="42" height="30" rx="15" fill="#153D3B"/>
+        <text class="number" x="41" y="41" fill="#52E4C5" text-anchor="middle">01</text>
+        <circle cx="191" cy="35" r="5" fill="#25D5B2"/>
+        <text class="stage-en" x="20" y="91">BRIEF</text>
+        <text class="stage-ko" x="20" y="128">방향 잡기</text>
+        <text class="stage-copy" x="20" y="169">독자 · 목적 · 문체</text>
+        <path d="M20 195H204" stroke="#24364D"/>
+        <text class="micro" x="20" y="221">무엇을 약속할 것인가</text>
+      </g>
+
+      <g transform="translate(335 254)">
+        <rect width="224" height="238" rx="24" fill="#0E1A2C" stroke="#263850"/>
+        <rect x="20" y="20" width="42" height="30" rx="15" fill="#15323F"/>
+        <text class="number" x="41" y="41" fill="#64D5F4" text-anchor="middle">02</text>
+        <circle cx="191" cy="35" r="5" fill="#4DC5EC"/>
+        <text class="stage-en" x="20" y="91">RESEARCH</text>
+        <text class="stage-ko" x="20" y="128">근거 모으기</text>
+        <text class="stage-copy" x="20" y="169">출처 · 사실 · 사례</text>
+        <path d="M20 195H204" stroke="#24364D"/>
+        <text class="micro" x="20" y="221">주장에 출처가 있는가</text>
+      </g>
+
+      <g transform="translate(578 254)">
+        <rect width="224" height="238" rx="24" fill="#0E1A2C" stroke="#263850"/>
+        <rect x="20" y="20" width="42" height="30" rx="15" fill="#172E48"/>
+        <text class="number" x="41" y="41" fill="#78B7FF" text-anchor="middle">03</text>
+        <circle cx="191" cy="35" r="5" fill="#72A4FF"/>
+        <text class="stage-en" x="20" y="91">PLAN</text>
+        <text class="stage-ko" x="20" y="128">구조 세우기</text>
+        <text class="stage-copy" x="20" y="169">목차 · 성과 · 흐름</text>
+        <path d="M20 195H204" stroke="#24364D"/>
+        <text class="micro" x="20" y="221">모든 장이 약속을 돕는가</text>
+      </g>
+
+      <g transform="translate(821 254)">
+        <rect width="224" height="238" rx="24" fill="#0E1A2C" stroke="#263850"/>
+        <rect x="20" y="20" width="42" height="30" rx="15" fill="#1D2B4A"/>
+        <text class="number" x="41" y="41" fill="#91A8FF" text-anchor="middle">04</text>
+        <circle cx="191" cy="35" r="5" fill="#879BFF"/>
+        <text class="stage-en" x="20" y="91">DRAFT</text>
+        <text class="stage-ko" x="20" y="128">원고 쓰기</text>
+        <text class="stage-copy" x="20" y="169">개념 · 예시 · 실습</text>
+        <path d="M20 195H204" stroke="#24364D"/>
+        <text class="micro" x="20" y="221">manuscript/ 기준본</text>
+      </g>
+
+      <g transform="translate(1064 254)">
+        <rect width="224" height="238" rx="24" fill="#0E1A2C" stroke="#263850"/>
+        <rect x="20" y="20" width="42" height="30" rx="15" fill="#28264B"/>
+        <text class="number" x="41" y="41" fill="#B095FF" text-anchor="middle">05</text>
+        <circle cx="191" cy="35" r="5" fill="#A17FFF"/>
+        <text class="stage-en" x="20" y="91">EDITORIAL QA</text>
+        <text class="stage-ko" x="20" y="128">편집 검수</text>
+        <text class="stage-copy" x="20" y="169">구조 · 사실 · 경험</text>
+        <path d="M20 195H204" stroke="#24364D"/>
+        <text class="micro" x="20" y="221">작성과 검수를 분리</text>
+      </g>
+
+      <g transform="translate(1307 254)">
+        <rect width="224" height="238" rx="24" fill="#121B31" stroke="#584991"/>
+        <rect x="20" y="20" width="42" height="30" rx="15" fill="#332653"/>
+        <text class="number" x="41" y="41" fill="#C7B5FF" text-anchor="middle">06</text>
+        <circle cx="191" cy="35" r="5" fill="#B693FF"/>
+        <text class="stage-en" x="20" y="91">RELEASE</text>
+        <text class="stage-ko" x="20" y="128">출간하기</text>
+        <text class="stage-copy" x="20" y="169">검증 · 패키징 · 배포</text>
+        <path d="M20 195H204" stroke="#2E3150"/>
+        <text class="micro" x="20" y="221">승인된 원고에서 파생</text>
+      </g>
+    </g>
+
+    <g transform="translate(92 545)">
+      <rect width="1196" height="70" rx="22" fill="url(#state)" stroke="#314763"/>
+      <circle cx="35" cy="35" r="10" fill="#24D6B1" fill-opacity="0.16" stroke="#24D6B1"/>
+      <circle cx="35" cy="35" r="3" fill="#56E6C8"/>
+      <text class="state-title" x="60" y="31">book-project.json</text>
+      <text class="state-copy" x="60" y="53">단계별 상태 · 완료 근거 · 산출물 경로를 기록하는 프로젝트의 단일 지도</text>
+      <g transform="translate(862 18)">
+        <rect width="98" height="34" rx="17" fill="#0D2230" stroke="#2C6A67"/>
+        <text class="micro" x="49" y="22" text-anchor="middle" fill="#73DFC8">STATE</text>
+        <rect x="108" width="112" height="34" rx="17" fill="#131F39" stroke="#38527A"/>
+        <text class="micro" x="164" y="22" text-anchor="middle" fill="#91B2E6">EVIDENCE</text>
+        <rect x="230" width="86" height="34" rx="17" fill="#211D3C" stroke="#5B4C87"/>
+        <text class="micro" x="273" y="22" text-anchor="middle" fill="#C1ADFF">GATE</text>
+      </g>
+    </g>
+
+    <g transform="translate(1311 546)">
+      <rect width="220" height="68" rx="20" fill="#251F43" stroke="#735CB4"/>
+      <text class="stage-en" x="110" y="28" text-anchor="middle" fill="#BBA7FF">HUMAN GATE</text>
+      <text class="micro" x="110" y="49" text-anchor="middle">사람이 승인한 뒤 배포</text>
+    </g>
+
+    <g transform="translate(92 665)">
+      <text class="stage-en" x="0" y="16">ONE APPROVED MANUSCRIPT, MANY OUTPUTS</text>
+      <text class="stage-ko" x="0" y="53">하나의 기준본에서 필요한 결과물만 만듭니다</text>
+
+      <g transform="translate(748 0)">
+        <rect width="214" height="96" rx="20" fill="#0C1828" stroke="#253750"/>
+        <rect x="18" y="18" width="34" height="34" rx="10" fill="#123331"/>
+        <path d="M29 27H41M29 34H41M29 41H37" stroke="#54DEC1" stroke-width="2" stroke-linecap="round"/>
+        <text class="output-title" x="68" y="37">BOOK FILES</text>
+        <text class="output-copy" x="68" y="61">PDF · EPUB · DOCX</text>
+      </g>
+      <g transform="translate(976 0)">
+        <rect width="214" height="96" rx="20" fill="#0C1828" stroke="#253750"/>
+        <rect x="18" y="18" width="34" height="34" rx="10" fill="#172D45"/>
+        <rect x="27" y="27" width="16" height="12" rx="2" fill="none" stroke="#78B7FF" stroke-width="2"/>
+        <path d="M32 44H38" stroke="#78B7FF" stroke-width="2" stroke-linecap="round"/>
+        <text class="output-title" x="68" y="37">PRESENTATION</text>
+        <text class="output-copy" x="68" y="61">PPTX · PDF · NOTES</text>
+      </g>
+      <g transform="translate(1204 0)">
+        <rect width="235" height="96" rx="20" fill="#0C1828" stroke="#253750"/>
+        <rect x="18" y="18" width="34" height="34" rx="10" fill="#282447"/>
+        <circle cx="35" cy="35" r="9" fill="none" stroke="#B397FF" stroke-width="2"/>
+        <path d="M26 35H44M35 26C39 30 39 40 35 44M35 26C31 30 31 40 35 44" fill="none" stroke="#B397FF" stroke-width="1.5"/>
+        <text class="output-title" x="68" y="37">WEBSITE</text>
+        <text class="output-copy" x="68" y="61">STATIC · HOSTED</text>
+      </g>
+    </g>
+
+    <text x="92" y="844" font-size="13" font-weight="600" letter-spacing="1.2" fill="#61738E">PLAN → CREATE → VERIFY → PUBLISH</text>
+    <text x="1508" y="844" text-anchor="end" font-size="13" font-weight="600" letter-spacing="0.8" fill="#61738E">OPEN WORKFLOW SKILL</text>
+  </g>
+</svg>
