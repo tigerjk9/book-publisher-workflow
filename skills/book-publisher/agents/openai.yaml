@@ -1,0 +1,4 @@
+interface:
+  display_name: "Book Publisher"
+  short_description: "AI로 책 기획·집필·검수·출간을 운영합니다"
+  default_prompt: "$book-publisher로 책 프로젝트를 시작하고 다음 완료 게이트까지 진행해 주세요."
