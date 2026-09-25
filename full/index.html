@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="ko" data-theme="dark" data-preset="classic">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Book-Publisher 워크플로우 · 인터랙티브 도식</title>
+<meta name="description" content="AI 다중 에이전트 집필부터 Puvles 사람 검토 게이트, 책 웹·PPT·발표자료 사이트까지 — Book-Publisher 출판 파이프라인을 탐색하는 인터랙티브 도식." />
+<style>
+  :root{
+    --bg:#0f1420; --bg2:#0b0f18; --surface:#181f2e; --surface2:#1f2838;
+    --text:#e8edf6; --muted:#94a3b8; --line:#2a3448; --edge:#8291aa;
+    --panel:#141a27; --panelbd:#26324a; --chip:#22304a; --accent:#38bdf8;
+    --grid:transparent;
+  }
+  html[data-theme="light"]{
+    --bg:#f4f6fb; --bg2:#eef1f8; --surface:#ffffff; --surface2:#f7f9fd;
+    --text:#111826; --muted:#5b6b86; --line:#d5dded; --edge:#7c8aa5;
+    --panel:#ffffff; --panelbd:#e2e8f5; --chip:#eef2fb; --accent:#0284c7;
+    --grid:transparent;
+  }
+  html[data-preset="blueprint"][data-theme="dark"]{ --bg:#071426; --bg2:#050f1d; --surface:#0c2036; --surface2:#0f2744; --text:#dbeafe; --muted:#7fa9d6; --line:#1d4670; --edge:#4f83bd; --panel:#0a1c31; --panelbd:#1b3d63; --chip:#123350; --grid:#123156; }
+  html[data-preset="blueprint"][data-theme="light"]{ --bg:#eaf2fb; --bg2:#e0ecf9; --surface:#ffffff; --surface2:#f2f7fd; --text:#0b2545; --muted:#3f6491; --line:#bcd3ef; --edge:#5b83b3; --panel:#ffffff; --panelbd:#cfe0f4; --chip:#e4eefb; --grid:#cadcf3; }
+  html[data-preset="signal"][data-theme="dark"]{ --bg:#080a12; --bg2:#05070d; --surface:#12151f; --surface2:#171b28; --text:#f0f4ff; --muted:#8b96b5; --line:#242a3d; --edge:#9aa6c8; --panel:#0d101a; --panelbd:#20263a; --chip:#1a2136; }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"Pretendard","Segoe UI",-apple-system,BlinkMacSystemFont,"Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; display:flex; flex-direction:column;
+  }
+  .app{display:flex; flex-direction:column; height:100vh; min-height:0}
+  header.bar{
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    padding:12px 18px; border-bottom:1px solid var(--line); background:var(--bg2);
+  }
+  .brand{display:flex; flex-direction:column; gap:2px; margin-right:auto}
+  .brand h1{font-size:16px; margin:0; letter-spacing:-.2px}
+  .brand p{margin:0; font-size:12px; color:var(--muted)}
+  .controls{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+  .ctl{
+    display:inline-flex; align-items:center; gap:6px; cursor:pointer; user-select:none;
+    background:var(--surface); color:var(--text); border:1px solid var(--line);
+    border-radius:9px; padding:7px 11px; font-size:12.5px; line-height:1;
+    transition:border-color .15s, background .15s, transform .05s;
+  }
+  .ctl:hover{border-color:var(--accent)}
+  .ctl:active{transform:translateY(1px)}
+  .ctl.on{border-color:var(--accent); color:var(--accent)}
+  select.ctl{appearance:none; padding-right:22px; background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%); background-position:calc(100% - 13px) 52%,calc(100% - 8px) 52%; background-size:5px 5px,5px 5px; background-repeat:no-repeat}
+  .main{display:flex; flex:1; min-height:0}
+  .stage{position:relative; flex:1; min-width:0; overflow:hidden; background:
+      radial-gradient(circle at 20% 0%, color-mix(in srgb,var(--accent) 7%, transparent), transparent 45%),
+      var(--bg)}
+  svg#diagram{width:100%; height:100%; display:block; touch-action:none; cursor:grab}
+  svg#diagram.grab{cursor:grabbing}
+  .gridlayer{stroke:var(--grid); stroke-width:1}
+  /* interactivity classes (kept in-svg for export safety) */
+  .node,.edge,.edgelabel{transition:opacity .18s}
+  .dim{opacity:.14}
+  .edge.dim{opacity:.07}
+  .node .card{transition:filter .15s, stroke-width .15s}
+  .node.sel .card{stroke-width:2.4px; filter:drop-shadow(0 0 0 transparent)}
+  .node{cursor:pointer}
+  .edge path{fill:none}
+  .trace .edge path.flow{stroke-dasharray:7 9; animation:dash 1.1s linear infinite}
+  @keyframes dash{to{stroke-dashoffset:-32}}
+  aside.panel{
+    width:340px; flex:0 0 340px; border-left:1px solid var(--line);
+    background:var(--panel); display:flex; flex-direction:column; min-height:0;
+  }
+  .panel .scroll{overflow:auto; padding:16px 16px 22px}
+  .p-hint{color:var(--muted); font-size:13px; line-height:1.6}
+  .p-kicker{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+  .p-title{font-size:17px; margin:0 0 10px; letter-spacing:-.2px; line-height:1.3}
+  .p-meta{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px}
+  .tag{font-size:11.5px; padding:4px 9px; border-radius:999px; background:var(--chip); color:var(--text); border:1px solid var(--panelbd); display:inline-flex; gap:5px; align-items:center}
+  .tag b{font-weight:700}
+  .p-body{font-size:13.5px; line-height:1.72; color:var(--text)}
+  .p-sec{margin-top:14px}
+  .p-sec h4{font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+  .p-list{margin:0; padding-left:0; list-style:none; font-size:12.5px; line-height:1.6}
+  .p-list li{padding:5px 0 5px 16px; position:relative; color:var(--text)}
+  .p-list li::before{content:""; position:absolute; left:0; top:12px; width:6px; height:6px; border-radius:2px; background:var(--accent)}
+  code.path{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Consolas,monospace; font-size:11.5px; background:var(--chip); padding:1.5px 5px; border-radius:5px; border:1px solid var(--panelbd)}
+  .legend{border-top:1px solid var(--line); padding:12px 16px; background:var(--panel)}
+  .legend h4{margin:0 0 8px; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+  .legend .row{display:flex; flex-wrap:wrap; gap:6px 12px}
+  .legend .li{display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted)}
+  .legend .sw{width:12px; height:12px; border-radius:3px}
+  footer.foot{padding:8px 18px; border-top:1px solid var(--line); background:var(--bg2); font-size:11.5px; color:var(--muted); display:flex; gap:14px; flex-wrap:wrap; align-items:center}
+  footer.foot a{color:var(--accent); text-decoration:none}
+  footer.foot a:hover{text-decoration:underline}
+  .spacer{flex:1}
+  @media (max-width:820px){
+    .main{flex-direction:column}
+    aside.panel{width:auto; flex:0 0 auto; max-height:44vh; border-left:none; border-top:1px solid var(--line)}
+    .brand h1{font-size:14px}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div class="brand">
+      <h1>Book-Publisher 워크플로우</h1>
+      <p>AI 다중 에이전트 집필 → 사람 검토 게이트 → 책 웹·PPT·발표자료 · 노드를 눌러 탐색하세요</p>
+    </div>
+    <div class="controls">
+      <select class="ctl" id="preset" title="시각 프리셋">
+        <option value="classic">Classic</option>
+        <option value="signal">Signal Flow</option>
+        <option value="blueprint">Blueprint</option>
+      </select>
+      <button class="ctl" id="theme" title="테마 전환">🌙 <span>Dark</span></button>
+      <button class="ctl" id="trace" title="흐름 애니메이션">▶ 흐름</button>
+      <button class="ctl" id="reset" title="보기 초기화">⟲ 보기</button>
+      <button class="ctl" id="pngbtn" title="PNG 내보내기">↧ PNG</button>
+      <button class="ctl" id="svgbtn" title="SVG 내보내기">↧ SVG</button>
+    </div>
+  </header>
+  <div class="main">
+    <div class="stage" id="stage">
+      <svg id="diagram" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <aside class="panel">
+      <div class="scroll" id="detail">
+        <p class="p-kicker">안내</p>
+        <p class="p-title">단계를 선택하세요</p>
+        <p class="p-hint">각 노드를 클릭하면 그 단계의 완료 근거와 산출물을 볼 수 있습니다. 노드에 마우스를 올리면 연결된 경로가 강조됩니다. 마우스 휠로 확대/축소, 빈 곳을 끌어 이동합니다.</p>
+      </div>
+      <div class="legend" id="legend"></div>
+    </aside>
+  </div>
+  <footer class="foot">
+    <span id="footnote">사람 검토 게이트 ★ 는 자동이 아닙니다 — 여기서 멈추고 보고합니다.</span>
+    <span class="spacer"></span>
+    <span>Inspired by <a href="https://github.com/tt-a1i/archify" target="_blank" rel="noopener">archify</a> (MIT)</span>
+  </footer>
+</div>
+
+<script>
+/* ------------------------------------------------------------------ *
+ * Book-Publisher workflow — interactive diagram (self-contained)
+ * Engine is shared with the public repo version; only WF data differs.
+ * ------------------------------------------------------------------ */
+const WF = {
+  meta:{ w:1200, h:1520,
+    title:"Book-Publisher 워크플로우",
+    subtitle:"AI 다중 에이전트 집필 → 사람 검토 게이트 → 책 웹·PPT·발표자료 · 노드를 눌러 탐색하세요",
+    foot:"사람 검토 게이트 ★ 는 자동이 아닙니다 — 여기서 멈추고 보고합니다.",
+    doctitle:"Book-Publisher 워크플로우 · 인터랙티브 도식" },
+  kinds:{
+    start:   {c:"#64748b", ko:"시작·선택"},
+    plan:    {c:"#6366f1", ko:"조사·기획"},
+    write:   {c:"#3b82f6", ko:"집필·이미지"},
+    review:  {c:"#f59e0b", ko:"검토·QA"},
+    decision:{c:"#eab308", ko:"분기 판단"},
+    puvles:  {c:"#ec4899", ko:"Puvles 왕복"},
+    gate:    {c:"#ef4444", ko:"사람 검토 게이트 ★"},
+    milestone:{c:"#22c55e", ko:"확정 원고"},
+    book:    {c:"#8b5cf6", ko:"책 웹 경로"},
+    present: {c:"#14b8a6", ko:"발표자료 경로"}
+  },
+  nodes:[
+    {id:"S1", cx:600, y:40, kind:"start", lines:["문체·출간·발표 선택"],
+     detail:{kicker:"Phase 0", tags:[["질문","5개"]],
+       body:"집필을 시작하기 전에 다섯 가지를 정합니다. 저장된 답은 재사용하고, 신규 미응답을 임의로 확정하지 않습니다.",
+       list:["문체 — educator(기본) / hanbit-practical(실습서)","출간 경로 — direct-web / puvles-then-web","Puvles 선택 시 책 웹 게시 — enabled / deferred","PPT 제작 여부 — presentation.enabled","발표자료 사이트 여부 — presentation.website"],
+       gate:"선택값을 book-prd.json(PRD)에 저장"}},
+
+    {id:"R1", cx:600, y:144, kind:"plan", lines:["자료 조사"],
+     detail:{kicker:"1단계 · book-researcher", tags:[["model","sonnet"]],
+       body:"참고 원고 분석[REF]과 최신 AI·교육 트렌드[LATEST]를 묶어 출처를 정리합니다.",
+       artifacts:[".omc/research-{TS}.md"], gate:"근거가 필요한 주장에 출처 또는 미해결 이슈 기록"}},
+
+    {id:"P1", cx:600, y:248, kind:"plan", lines:["목차·브리핑·이미지 계획"],
+     detail:{kicker:"2단계 · book-planner", tags:[["model","sonnet"],["승인","게이트"]],
+       body:"목차·독자·목표와 작가별 브리핑을 설계하고, 장별 그림의 목적·수량·위치, 인물·반복 사물 reference sheet를 함께 정합니다.",
+       artifacts:[".omc/briefing-shared.md",".omc/briefing-agent{N}.md"], gate:"사용자 승인 게이트 통과 후 집필로 진행"}},
+
+    {id:"W1", cx:466, y:352, kind:"write", lines:["집필 ×N (병렬)"],
+     detail:{kicker:"3단계 · book-writer ×N", tags:[["model","opus"],["병렬","N"]],
+       body:"11원칙을 문장마다 적용해 챕터를 씁니다. 문체별로 갈립니다 — 실습서는 한빛 합쇼체, 소설형(5~6권)은 해라체 + AI+ST 6단계. 문장 품질에 직결되므로 writer만 opus를 씁니다.",
+       artifacts:["docs/.draft-agent{N}.md"], gate:"모든 계획 챕터 존재 · scaffold placeholder 0"}},
+
+    {id:"W2", cx:734, y:352, kind:"write", lines:["이미지 생성·실습 캡처"],
+     detail:{kicker:"3단계 · 본문 이미지 계약", tags:[["기준","reference sheet"]],
+       body:"이미지 생성 도구가 reference를 참조해 인물·반복 사물을 일관되게 그립니다. 기술 화면은 생성 이미지로 대체하지 않고 실제 코드를 실행해 캡처합니다 — 그 과정이 원고 검증도 겸합니다.",
+       gate:"문단 사이 그림·캡션 삽입 · 일관성·시각 QA"}},
+
+    {id:"C1", cx:600, y:456, kind:"review", lines:["독자 관점 검토 ×N"],
+     detail:{kicker:"4단계 · book-critic ×N", tags:[["model","sonnet"],["판정","PASS/REVISE/REWRITE"]],
+       body:"독자 시뮬레이션 방식으로 초안을 17개 항목으로 검토합니다. 집필과 검수는 항상 분리된 패스로 진행합니다.",
+       gate:"REVISE/REWRITE 항목 반영"}},
+
+    {id:"I1", cx:600, y:560, kind:"review", lines:["통합 편집"],
+     detail:{kicker:"5단계 · book-integrator", tags:[["model","sonnet"]],
+       body:"여러 초안을 하나의 원고로 통합합니다. bash 병합 → 용어 표준화 → 챕터 브리지 → 톤 통일 순으로 처리합니다.",
+       gate:"상호 참조 해결 · 소제목 #### 명사형 전수 확인"}},
+
+    {id:"Q1", cx:600, y:664, kind:"review", lines:["사실·문체·이미지 QA"],
+     detail:{kicker:"6단계 · /book-qa-harness", tags:[["병렬","3 에이전트"]],
+       body:"완성 원고를 출판 전 병렬 검증합니다. book-qa(금지 표현·구조·분량), book-qa-rules(AI 슬롭·표기 규칙), book-qa-principles(집필 원칙 구조). [SOURCE NEEDED] 자동 검증과 독립 이미지 검토를 함께 수행합니다.",
+       artifacts:[".omc/qa-report.md",".omc/qa-rules-report.md",".omc/qa-principles-report.md"], gate:"blocking 항목 해결 · 수용 한계 명시"}},
+
+    {id:"D1", cx:600, y:768, kind:"decision", shape:"diamond", lines:["Puvles","경유?"],
+     detail:{kicker:"분기", tags:[["설정","publishingRoute"]],
+       body:"puvles-then-web이면 사람이 퍼블리스에서 직접 읽고 고치는 왕복을 거칩니다. direct-web이면 이 왕복 없이 확정 원고로 바로 갑니다.",
+       gate:"설정 추가는 외부 업로드 실행 요청이 아님"}},
+
+    {id:"U1", cx:300, y:896, kind:"puvles", lines:["이미지 포함 업로드"],
+     detail:{kicker:"Puvles · /book-to-puvles", tags:[["채널","WebMCP"]],
+       body:"content/*.md 를 book.json + chapters/*.md 로 변환해 puvles.mjs 로 등록합니다. Puvles는 일반 MCP가 아니라, 로그인된 Chrome 탭을 원격 디버깅(포트 9222)으로 구동하는 WebMCP입니다. 이미지를 포함해 업로드합니다.",
+       gate:"머지 충돌 마커·raw HTML 있으면 전송 거부"}},
+
+    {id:"GATE", cx:300, y:1000, kind:"gate", shape:"gate", lines:["사람 검토 게이트 ★"],
+     detail:{kicker:"멈춤 지점 · 사람", tags:[["자동","아님"]],
+       body:"업로드 직후 여기서 멈추고 보고합니다. 사용자의 검토가 끝나기 전에는 내보내기·대조·배포로 넘어가지 않습니다. 글은 돌려 보는 것만으로 맞는지 알 수 없어서, 사람이 읽는 칸을 남겨 두었습니다.",
+       gate:"사용자 검토 완료 신호를 받기 전까지 대기"}},
+
+    {id:"X1", cx:300, y:1104, kind:"puvles", lines:["내보내기·대조·재QA"],
+     detail:{kicker:"Puvles · /puvles-to-md", tags:[["이미지","하베스트"]],
+       body:"편집본을 다운로드(get_chapter_content .markdown)하고 이미지 공개 URL을 로컬화합니다. 원격 편집 내용을 로컬 원고와 대조해 반영하고 다시 QA합니다. 내보내기가 확인되지 않으면 다운로드 성공을 보고하지 않습니다.",
+       gate:"원격 편집 ↔ 로컬 원고 양방향 대조 완료"}},
+
+    {id:"M1", cx:600, y:1208, kind:"milestone", lines:["확정 원고 + 이미지"],
+     detail:{kicker:"기준본", tags:[["단일 기준","manuscript"]],
+       body:"manuscript가 원고의 기준본입니다. 확정 원고와 이미지에서 아래 세 산출물이 각각 독립으로 파생됩니다 — 하나를 보류해도 다른 하나는 진행할 수 있습니다.",
+       gate:"세 갈래(책 웹·PPT·발표 사이트)는 서로 독립"}},
+
+    {id:"B1", cx:250, y:1312, kind:"book", lines:["책 독서 웹사이트"],
+     detail:{kicker:"책 웹 게시 선택 시 · website-syncer", tags:[["설정","webPublication"],["스택","Next.js 14"]],
+       body:"websites/book-0N/content/ 를 원고와 양방향 동기화하고, 모바일·데스크톱 가독성·표지/OG 일치·전체 슬러그 반응형을 검증한 뒤 요청된 배포와 공개 alias를 확인합니다. deferred이면 웹 작업을 보류하고 로컬 staging으로 패키지만 만듭니다.",
+       gate:"모든 수정 완료 후 최종본 배포 · 공개 alias 확인"}},
+
+    {id:"PP1", cx:600, y:1312, kind:"present", lines:["ppt-automation 제작"],
+     detail:{kicker:"PPT 제작 선택 시 · US-006", tags:[["엔진","slidesmith"]],
+       body:"범위·청중·발표 시간·장수·디자인을 확정하고 검증된 원고와 이미지를 기존 PPT 엔진에 전달합니다. 발표용 스토리와 시각 구성은 새로 설계하되 사실·출처는 유지합니다.",
+       gate:"게이트 6종 통과"}},
+
+    {id:"PP2", cx:600, y:1416, kind:"present", lines:["PPTX·PDF·발표 스크립트"],
+     detail:{kicker:"PPT 산출물", tags:[["형식","PPTX / PDF"]],
+       body:"슬라이드 덱과 PDF, 발표자 노트·스크립트를 만듭니다. 슬라이드 가독성과 내보낸 PDF를 별도로 검증합니다.",
+       gate:"슬라이드 가독성·PDF 개별 검증"}},
+
+    {id:"PR1", cx:950, y:1312, kind:"present", lines:["QR·갤러리 발표 사이트"],
+     detail:{kicker:"발표자료 사이트 선택 시 · US-007", tags:[["설정","presentation.website"]],
+       body:"슬라이드 갤러리·확대 보기·QR·PPTX/PDF 다운로드를 별도 주소로 제공합니다. 화면·다운로드를 검증하고 요청된 배포를 확인합니다. 책 홈페이지 공개 여부와는 독립입니다.",
+       gate:"화면·다운로드 검증 후 요청된 배포"}}
+  ],
+  edges:[
+    {f:"S1", t:"R1", cat:"main"},
+    {f:"R1", t:"P1", cat:"main"},
+    {f:"P1", t:"W1", cat:"main"},
+    {f:"P1", t:"W2", cat:"main"},
+    {f:"W1", t:"C1", cat:"main"},
+    {f:"W2", t:"C1", cat:"main"},
+    {f:"C1", t:"I1", cat:"main"},
+    {f:"I1", t:"Q1", cat:"main"},
+    {f:"Q1", t:"D1", cat:"main"},
+    {f:"D1", t:"U1", cat:"puvles", fs:"left", label:"예"},
+    {f:"D1", t:"M1", cat:"muted", label:"아니오"},
+    {f:"U1", t:"GATE", cat:"gate"},
+    {f:"GATE", t:"X1", cat:"gate"},
+    {f:"X1", t:"M1", cat:"puvles"},
+    {f:"M1", t:"B1", cat:"book", fs:"left", label:"책 웹 게시 시"},
+    {f:"M1", t:"PP1", cat:"present", label:"PPT 제작 시"},
+    {f:"M1", t:"PR1", cat:"present", fs:"right", label:"발표 사이트 시"},
+    {f:"PP1", t:"PP2", cat:"present"}
+  ],
+  catColor:{ main:"#8291aa", muted:"#5b6579", gate:"#ef4444", puvles:"#ec4899", book:"#8b5cf6", present:"#14b8a6" }
+};
+
+/* ---------------- engine ---------------- */
+const SVGNS="http://www.w3.org/2000/svg";
+const NW=232, NH=64, DW=170, DH=96, GW=250, GH=70;
+const el=(t,a={})=>{const e=document.createElementNS(SVGNS,t); for(const k in a) e.setAttribute(k,a[k]); return e;};
+const root=document.documentElement;
+const svg=document.getElementById("diagram");
+const byId=Object.fromEntries(WF.nodes.map(n=>[n.id,n]));
+
+function dims(n){
+  if(n.shape==="diamond") return {w:DW,h:DH};
+  if(n.shape==="gate") return {w:GW,h:GH};
+  return {w:NW,h:NH};
+}
+function box(n){const d=dims(n); return {x:n.cx-d.w/2, y:n.y, w:d.w, h:d.h, cx:n.cx, cy:n.y+d.h/2};}
+function anchor(n, side){
+  const b=box(n);
+  if(n.shape==="diamond"){
+    if(side==="top") return [b.cx, b.y];
+    if(side==="bottom") return [b.cx, b.y+b.h];
+    if(side==="left") return [b.x, b.cy];
+    if(side==="right") return [b.x+b.w, b.cy];
+  }
+  if(side==="top") return [b.cx, b.y];
+  if(side==="bottom") return [b.cx, b.y+b.h];
+  if(side==="left") return [b.x, b.cy];
+  if(side==="right") return [b.x+b.w, b.cy];
+  return [b.cx, b.cy];
+}
+function pathFor(e){
+  const a=byId[e.f], b=byId[e.t];
+  const fs=e.fs||"bottom", ts=e.ts||"top";
+  const [x0,y0]=anchor(a,fs), [x1,y1]=anchor(b,ts);
+  let mid;
+  if(fs==="left"||fs==="right"){
+    // horizontal out, then vertical into target top
+    return {d:`M ${x0} ${y0} H ${x1} V ${y1}`, lx:(x0+x1)/2, ly:y0-8};
+  }
+  if(Math.abs(x0-x1)<2){
+    return {d:`M ${x0} ${y0} L ${x1} ${y1}`, lx:x0+8, ly:(y0+y1)/2};
+  }
+  mid=y0+(y1-y0)/2;
+  return {d:`M ${x0} ${y0} V ${mid} H ${x1} V ${y1}`, lx:x1, ly:mid-8};
+}
+
+// adjacency for hover highlight
+const adj={}; WF.nodes.forEach(n=>adj[n.id]=new Set());
+WF.edges.forEach((e,i)=>{ adj[e.f].add("n:"+e.t); adj[e.t].add("n:"+e.f); adj[e.f].add("e:"+i); adj[e.t].add("e:"+i); });
+
+let vp; // viewport group
+function render(){
+  const preset=root.getAttribute("data-preset");
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
+  svg.setAttribute("viewBox",`0 0 ${WF.meta.w} ${WF.meta.h}`);
+  svg.setAttribute("preserveAspectRatio","xMidYMid meet");
+
+  const cs=getComputedStyle(root);
+  const surface=cs.getPropertyValue("--surface").trim();
+  const text=cs.getPropertyValue("--text").trim();
+  const muted=cs.getPropertyValue("--muted").trim();
+  const line=cs.getPropertyValue("--line").trim();
+  const grid=cs.getPropertyValue("--grid").trim();
+  const isBlue=preset==="blueprint";
+  const isSignal=preset==="signal";
+  const mono="#3aa0e6";
+
+  // in-svg style (interactivity + export safety)
+  const st=el("style");
+  st.textContent=`.dim{opacity:.14}.edge.dim{opacity:.07}.node,.edge,.edgelabel{transition:opacity .18s}.node.sel .card{stroke-width:2.6px}.trace .edge path.flow{stroke-dasharray:7 9;animation:dash 1.1s linear infinite}@keyframes dash{to{stroke-dashoffset:-32}}`;
+  svg.appendChild(st);
+
+  // defs: arrow markers per category color
+  const defs=el("defs");
+  const cats=WF.catColor;
+  Object.keys(cats).forEach(k=>{
+    const col=isBlue?(k==="gate"?cats.gate:mono):cats[k];
+    const m=el("marker",{id:"arw-"+k, viewBox:"0 0 10 10", refX:"8.5", refY:"5", markerWidth:"7", markerHeight:"7", orient:"auto-start-reverse"});
+    m.appendChild(el("path",{d:"M0 0 L10 5 L0 10 z", fill:col}));
+    defs.appendChild(m);
+  });
+  if(isSignal){
+    const f=el("filter",{id:"glow", x:"-40%", y:"-40%", width:"180%", height:"180%"});
+    f.appendChild(el("feGaussianBlur",{stdDeviation:"2.4", result:"b"}));
+    const mg=el("feMerge"); mg.appendChild(el("feMergeNode",{in:"b"})); mg.appendChild(el("feMergeNode",{in:"SourceGraphic"}));
+    f.appendChild(mg); defs.appendChild(f);
+  }
+  svg.appendChild(defs);
+
+  vp=el("g",{id:"viewport"});
+  svg.appendChild(vp);
+
+  // grid (blueprint)
+  if(grid && grid!=="transparent"){
+    const g=el("g",{class:"gridlayer"});
+    for(let x=0;x<=WF.meta.w;x+=40) g.appendChild(el("line",{x1:x,y1:0,x2:x,y2:WF.meta.h,stroke:grid,"stroke-width":x%200===0?1:.5}));
+    for(let y=0;y<=WF.meta.h;y+=40) g.appendChild(el("line",{x1:0,y1:y,x2:WF.meta.w,y2:y,stroke:grid,"stroke-width":y%200===0?1:.5}));
+    vp.appendChild(g);
+  }
+
+  // edges
+  const eLayer=el("g"); vp.appendChild(eLayer);
+  WF.edges.forEach((e,i)=>{
+    const col=isBlue?(e.cat==="gate"?cats.gate:mono):cats[e.cat];
+    const g=el("g",{class:"edge","data-ei":i});
+    const p=pathFor(e);
+    const path=el("path",{class:"flow", d:p.d, stroke:col, "stroke-width":e.cat==="muted"?1.8:2.2,
+      "stroke-linejoin":"round","stroke-linecap":"round","marker-end":"url(#arw-"+e.cat+")"});
+    if(e.cat==="muted") path.setAttribute("stroke-dasharray","2 6");
+    if(isSignal) path.setAttribute("filter","url(#glow)");
+    g.appendChild(path);
+    if(e.label){
+      const lg=el("g",{class:"edgelabel"});
+      const tw=e.label.length*11+12;
+      lg.appendChild(el("rect",{x:p.lx-tw/2, y:p.ly-11, width:tw, height:18, rx:9, fill:surface, stroke:line, "stroke-width":1, opacity:.96}));
+      const tx=el("text",{x:p.lx, y:p.ly+2.5, "text-anchor":"middle", "font-size":11, fill:muted, "font-weight":600}); tx.textContent=e.label;
+      lg.appendChild(tx); g.appendChild(lg);
+    }
+    eLayer.appendChild(g);
+  });
+
+  // nodes
+  const nLayer=el("g"); vp.appendChild(nLayer);
+  WF.nodes.forEach(n=>{
+    const b=box(n);
+    const kc=WF.kinds[n.kind];
+    let accent=kc.c;
+    if(isBlue && n.kind!=="gate") accent=mono;
+    const g=el("g",{class:"node","data-id":n.id, tabindex:"0", role:"button"});
+    g.setAttribute("aria-label", n.lines.join(" ")+" — "+kc.ko);
+
+    if(n.shape==="diamond"){
+      const cx=b.cx, cy=b.cy;
+      const poly=el("polygon",{class:"card",
+        points:`${cx},${b.y} ${b.x+b.w},${cy} ${cx},${b.y+b.h} ${b.x},${cy}`,
+        fill:surface, stroke:accent, "stroke-width":1.6});
+      if(isSignal) poly.setAttribute("filter","url(#glow)");
+      g.appendChild(poly);
+    } else if(n.shape==="gate"){
+      const r=el("rect",{class:"card", x:b.x, y:b.y, width:b.w, height:b.h, rx:12,
+        fill:isSignal?"#2a0d12":(root.getAttribute("data-theme")==="light"?"#fff1f2":"#2a1417"),
+        stroke:accent, "stroke-width":2.2});
+      if(isSignal) r.setAttribute("filter","url(#glow)");
+      g.appendChild(r);
+      g.appendChild(el("rect",{x:b.x, y:b.y, width:6, height:b.h, rx:3, fill:accent}));
+    } else {
+      const r=el("rect",{class:"card", x:b.x, y:b.y, width:b.w, height:b.h, rx:12,
+        fill:surface, stroke:accent, "stroke-width":1.4, "stroke-opacity":isBlue?.9:.55});
+      if(isSignal) r.setAttribute("filter","url(#glow)");
+      g.appendChild(r);
+      g.appendChild(el("rect",{x:b.x, y:b.y+10, width:5, height:b.h-20, rx:2.5, fill:accent}));
+    }
+
+    // label lines
+    const lines=n.lines;
+    const startY=b.cy-((lines.length-1)*9);
+    lines.forEach((ln,li)=>{
+      const t=el("text",{x:b.cx + (n.shape==="rect"||!n.shape?6:0), y:startY+li*18+5,
+        "text-anchor":"middle", "font-size":n.shape==="gate"?14:13.5,
+        "font-weight":n.kind==="gate"||n.kind==="milestone"?700:600, fill:text});
+      t.textContent=ln; g.appendChild(t);
+    });
+
+    nLayer.appendChild(g);
+  });
+
+  applyTrace();
+  wireNodes();
+  restoreTransform();
+}
+
+/* ---- interactivity ---- */
+function clearHi(){
+  svg.querySelectorAll(".node,.edge").forEach(x=>x.classList.remove("dim"));
+}
+function highlight(id){
+  const keep=new Set(["n:"+id]); adj[id].forEach(k=>keep.add(k));
+  svg.querySelectorAll(".node").forEach(x=>{ if(!keep.has("n:"+x.dataset.id)) x.classList.add("dim"); });
+  svg.querySelectorAll(".edge").forEach(x=>{ if(!keep.has("e:"+x.dataset.ei)) x.classList.add("dim"); });
+}
+let selId=null;
+function select(id){
+  selId=id;
+  svg.querySelectorAll(".node").forEach(x=>x.classList.toggle("sel", x.dataset.id===id));
+  renderDetail(byId[id]);
+}
+function wireNodes(){
+  svg.querySelectorAll(".node").forEach(g=>{
+    const id=g.dataset.id;
+    g.addEventListener("mouseenter",()=>{ if(!panning) highlight(id); });
+    g.addEventListener("mouseleave",()=>{ if(!panning) clearHi(); });
+    g.addEventListener("click",ev=>{ ev.stopPropagation(); select(id); });
+    g.addEventListener("keydown",ev=>{ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); select(id);} });
+  });
+  if(selId) svg.querySelectorAll(".node").forEach(x=>x.classList.toggle("sel", x.dataset.id===selId));
+}
+function esc(s){return String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+function renderDetail(n){
+  const kc=WF.kinds[n.kind], d=n.detail||{};
+  let h="";
+  h+=`<p class="p-kicker">${esc(d.kicker||kc.ko)}</p>`;
+  h+=`<p class="p-title">${esc(n.lines.join(" "))}</p>`;
+  h+=`<div class="p-meta"><span class="tag"><span class="sw" style="width:9px;height:9px;border-radius:3px;background:${kc.c}"></span>${esc(kc.ko)}</span>`;
+  (d.tags||[]).forEach(t=>{ h+=`<span class="tag"><b>${esc(t[0])}</b> ${esc(t[1])}</span>`; });
+  h+=`</div>`;
+  if(d.body) h+=`<p class="p-body">${esc(d.body)}</p>`;
+  if(d.list&&d.list.length){ h+=`<div class="p-sec"><h4>선택 항목</h4><ul class="p-list">`; d.list.forEach(x=>h+=`<li>${esc(x)}</li>`); h+=`</ul></div>`; }
+  if(d.artifacts&&d.artifacts.length){ h+=`<div class="p-sec"><h4>산출물</h4><ul class="p-list">`; d.artifacts.forEach(x=>h+=`<li><code class="path">${esc(x)}</code></li>`); h+=`</ul></div>`; }
+  if(d.gate){ h+=`<div class="p-sec"><h4>완료 게이트 / 근거</h4><p class="p-body" style="margin:0">${esc(d.gate)}</p></div>`; }
+  document.getElementById("detail").innerHTML=h;
+}
+function renderLegend(){
+  const keys=Object.keys(WF.kinds);
+  let h=`<h4>범례</h4><div class="row">`;
+  keys.forEach(k=>{ const kc=WF.kinds[k]; h+=`<span class="li"><span class="sw" style="background:${kc.c}"></span>${esc(kc.ko)}</span>`; });
+  h+=`</div>`;
+  document.getElementById("legend").innerHTML=h;
+}
+
+/* ---- pan / zoom ---- */
+let tx=0,ty=0,k=1, panning=false, sx=0,sy=0, moved=false;
+function applyTransform(){ if(vp) vp.setAttribute("transform",`translate(${tx} ${ty}) scale(${k})`); }
+function restoreTransform(){ applyTransform(); }
+function resetView(){ tx=0;ty=0;k=1; applyTransform(); }
+svg.addEventListener("wheel",ev=>{
+  ev.preventDefault();
+  const rect=svg.getBoundingClientRect();
+  const vb=WF.meta.w/rect.width; // svg user units per px (x); assume uniform via viewBox meet
+  const scaleY=WF.meta.h/rect.height;
+  const s=Math.max(vb,scaleY);
+  const px=(ev.clientX-rect.left)*s, py=(ev.clientY-rect.top)*s;
+  const f=ev.deltaY<0?1.12:1/1.12;
+  const nk=Math.min(4,Math.max(.4,k*f));
+  tx=px-(px-tx)*(nk/k); ty=py-(py-ty)*(nk/k); k=nk; applyTransform();
+},{passive:false});
+svg.addEventListener("pointerdown",ev=>{
+  if(ev.target.closest(".node")) return;
+  panning=true; moved=false; sx=ev.clientX; sy=ev.clientY; svg.classList.add("grab"); svg.setPointerCapture(ev.pointerId);
+});
+svg.addEventListener("pointermove",ev=>{
+  if(!panning) return;
+  const rect=svg.getBoundingClientRect(); const s=Math.max(WF.meta.w/rect.width,WF.meta.h/rect.height);
+  const dx=(ev.clientX-sx)*s, dy=(ev.clientY-sy)*s;
+  if(Math.abs(ev.clientX-sx)+Math.abs(ev.clientY-sy)>4) moved=true;
+  tx+=dx; ty+=dy; sx=ev.clientX; sy=ev.clientY; applyTransform();
+});
+function endPan(ev){ if(panning){ panning=false; svg.classList.remove("grab"); } }
+svg.addEventListener("pointerup",endPan);
+svg.addEventListener("pointercancel",endPan);
+svg.addEventListener("click",ev=>{ if(!ev.target.closest(".node") && !moved){ /* click empty: keep selection */ } });
+
+/* ---- controls ---- */
+let traceOn=false;
+function applyTrace(){ svg.classList.toggle("trace",traceOn); }
+document.getElementById("trace").addEventListener("click",e=>{
+  traceOn=!traceOn; e.currentTarget.classList.toggle("on",traceOn); applyTrace();
+});
+document.getElementById("theme").addEventListener("click",e=>{
+  const cur=root.getAttribute("data-theme")==="dark"?"light":"dark";
+  root.setAttribute("data-theme",cur);
+  e.currentTarget.innerHTML=cur==="dark"?'🌙 <span>Dark</span>':'☀️ <span>Light</span>';
+  render();
+});
+document.getElementById("preset").addEventListener("change",e=>{
+  root.setAttribute("data-preset",e.target.value); render();
+});
+document.getElementById("reset").addEventListener("click",resetView);
+
+/* ---- export ---- */
+function serialize(){
+  const clone=svg.cloneNode(true);
+  clone.removeAttribute("class");
+  clone.querySelectorAll(".dim,.sel").forEach(x=>x.classList.remove("dim","sel"));
+  const cs=getComputedStyle(root);
+  const bg=cs.getPropertyValue("--bg").trim();
+  const bgRect=el("rect",{x:0,y:0,width:WF.meta.w,height:WF.meta.h,fill:bg});
+  clone.insertBefore(bgRect, clone.firstChild.nextSibling);
+  clone.setAttribute("width",WF.meta.w); clone.setAttribute("height",WF.meta.h);
+  return '<?xml version="1.0" encoding="UTF-8"?>\n'+new XMLSerializer().serializeToString(clone);
+}
+function dl(name,blob){ const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1500); }
+document.getElementById("svgbtn").addEventListener("click",()=>{
+  dl("book-publisher-workflow.svg", new Blob([serialize()],{type:"image/svg+xml"}));
+});
+document.getElementById("pngbtn").addEventListener("click",()=>{
+  const scale=2, s=serialize();
+  const img=new Image();
+  img.onload=()=>{
+    const c=document.createElement("canvas"); c.width=WF.meta.w*scale; c.height=WF.meta.h*scale;
+    const ctx=c.getContext("2d"); ctx.scale(scale,scale); ctx.drawImage(img,0,0);
+    c.toBlob(b=>dl("book-publisher-workflow.png",b),"image/png");
+  };
+  img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(s);
+});
+
+/* ---- boot ---- */
+if(WF.meta.doctitle) document.title=WF.meta.doctitle;
+if(WF.meta.title) document.querySelector(".brand h1").textContent=WF.meta.title;
+if(WF.meta.subtitle) document.querySelector(".brand p").textContent=WF.meta.subtitle;
+if(WF.meta.foot) document.getElementById("footnote").textContent=WF.meta.foot;
+renderLegend();
+render();
+window.__wfReady=true;
+</script>
+</body>
+</html>
