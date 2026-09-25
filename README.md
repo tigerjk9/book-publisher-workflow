@@ -4,9 +4,27 @@
 
 ## 워크플로우 한눈에 보기
 
-[![Book Publisher Workflow: 브리프, 조사, 설계, 집필, 편집 검수, 출간의 6단계](assets/book-publisher-workflow.svg)](skills/book-publisher/references/workflow.md)
+[![Book Publisher Workflow 인터랙티브 도식 — Brief·Research·Plan·Draft·Editorial QA·Release 6단계와 선택 발표자료·웹사이트](assets/workflow-viz/preview.png)](https://tigerjk9.github.io/book-publisher-workflow/)
 
-도식을 선택하면 각 단계의 완료 조건과 검증 근거를 확인할 수 있습니다. `book-project.json`은 전 단계의 상태, 근거, 산출물 경로를 잇는 프로젝트의 단일 지도입니다.
+<p align="center"><a href="https://tigerjk9.github.io/book-publisher-workflow/"><b>▶ 인터랙티브 도식 열기</b></a> — 각 단계를 눌러 완료 근거(evidence)를 확인하고, 마우스 호버로 경로를 추적하며, 테마·프리셋(Classic·Signal Flow·Blueprint) 전환과 PNG/SVG 내보내기를 지원합니다. <a href="https://github.com/tt-a1i/archify">archify</a>(MIT) 아이디어를 기반으로 만든 완전 자립 HTML이며, 소스는 <a href="assets/workflow-viz/">assets/workflow-viz/</a>에 있습니다.</p>
+
+각 단계는 완료 근거(evidence)를 남긴 뒤에만 다음으로 이동합니다. `book-project.json`은 전 단계의 상태, 근거, 산출물 경로를 잇는 프로젝트의 단일 지도입니다. 이미지가 열리지 않아도 아래 도식은 항상 표시됩니다.
+
+```mermaid
+flowchart TD
+  MAP["book-project.json · 단일 지도"] -. 상태·근거 기록 .-> B["1 · Brief 브리프"]
+  B --> R["2 · Research 조사"]
+  R --> P["3 · Plan 구성"]
+  P --> D["4 · Draft 집필"]
+  D --> Q["5 · Editorial QA 편집 검수"]
+  Q --> REL["6 · Release 출간"]
+  REL -. 선택 .-> PRES["Presentation 발표자료"]
+  REL -. 선택 .-> WEB["Website 웹사이트"]
+  classDef opt fill:#f0fdfa,stroke:#14b8a6,color:#0f766e;
+  classDef rel fill:#f0fdf4,stroke:#22c55e,stroke-width:2px,color:#15803d;
+  class PRES,WEB opt;
+  class REL rel;
+```
 
 ## 제공하는 것
 
